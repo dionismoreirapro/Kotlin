@@ -1,6 +1,8 @@
 package com.mercadolivro.service
 
 import com.mercadolivro.enums.BookStatus
+import com.mercadolivro.enums.Errors
+import com.mercadolivro.extension.NotFoundException
 import com.mercadolivro.model.BookModel
 import com.mercadolivro.repository.BookRepository
 import org.springframework.stereotype.Service
@@ -24,7 +26,12 @@ class BookService(var bookRepository: BookRepository) {
     }
 
     fun findById(id: Int): BookModel {
-        return bookRepository.findById(id).orElseThrow()
+        return bookRepository.findById(id).orElseThrow {
+            NotFoundException(
+                Errors.ML001.message.format(id),
+                Errors.ML001.code
+            )
+        }
     }
 
     fun delete(id: Int) {
